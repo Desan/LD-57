@@ -1,0 +1,298 @@
+[gd_scene load_steps=27 format=3 uid="uid://dpvgp66b207k7"]
+
+[ext_resource type="Script" uid="uid://df5atssku01i" path="res://game/scripts/level.gd" id="1_xekuc"]
+[ext_resource type="Script" uid="uid://bxsbjwg7qkh2y" path="res://game/scripts/camera_controller.gd" id="2_fptlh"]
+[ext_resource type="Texture2D" uid="uid://cf6aansdnrc68" path="res://game/assets/backgrouns/2abb4da56bf69fefa3e676aad3b229d3.jpg" id="2_rfis5"]
+[ext_resource type="Texture2D" uid="uid://oyb58w550y6p" path="res://game/assets/spot_light_beam.png" id="3_huo5n"]
+[ext_resource type="Texture2D" uid="uid://dfvqreyqwp7id" path="res://game/assets/spot_light_beam_base.png" id="3_upydp"]
+[ext_resource type="Texture2D" uid="uid://kdqyp1xyiyyd" path="res://game/assets/spot_light_beam_main.png" id="4_iddtf"]
+[ext_resource type="Script" uid="uid://k18yqeeuqmby" path="res://game/scripts/submarine.gd" id="5_j2ba4"]
+[ext_resource type="Shader" uid="uid://duabdv613du0m" path="res://game/materials/crt-effect.gdshader" id="5_upydp"]
+[ext_resource type="Shader" uid="uid://cktnjpxp0osth" path="res://game/materials/underwater.gdshader" id="7_0aobv"]
+[ext_resource type="PackedScene" uid="uid://bj8t7pphv61h2" path="res://game/scenes/components/hook.tscn" id="7_kbgfp"]
+[ext_resource type="PackedScene" uid="uid://4bei6rlmtvq8" path="res://game/scenes/components/bullet.tscn" id="7_xya8t"]
+[ext_resource type="PackedScene" uid="uid://dxpu4qlxifalw" path="res://game/scenes/components/crate.tscn" id="11_fptlh"]
+[ext_resource type="Texture2D" uid="uid://dn8hnmotgi4rp" path="res://game/assets/vessel_a.png" id="12_kbgfp"]
+[ext_resource type="Texture2D" uid="uid://cch2sgfd1ibni" path="res://game/assets/particles/bubble.png" id="13_efumf"]
+[ext_resource type="PackedScene" uid="uid://bmnnubqx6uh6u" path="res://game/scenes/components/hud.tscn" id="13_nuw7w"]
+[ext_resource type="PackedScene" uid="uid://bnwtl5wpitoa1" path="res://game/scenes/components/spawn_point.tscn" id="15_8kyqo"]
+[ext_resource type="PackedScene" uid="uid://rqouxgvwm50t" path="res://game/scenes/components/driller.tscn" id="15_efumf"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kbgfp"]
+noise_type = 3
+seed = -310
+frequency = 0.0597
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nuw7w"]
+seamless = true
+seamless_blend_skirt = 0.712
+noise = SubResource("FastNoiseLite_kbgfp")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_j2ba4"]
+shader = ExtResource("7_0aobv")
+shader_parameter/refraction_map = SubResource("NoiseTexture2D_nuw7w")
+shader_parameter/refraction_stretch = Vector2(0.15, 0.2)
+shader_parameter/refraction_strength = 0.01
+shader_parameter/water_tint = Color(0, 0.0235294, 0.0117647, 0.0431373)
+shader_parameter/speed = 0.005
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0aobv"]
+shader = ExtResource("5_upydp")
+shader_parameter/resolution = Vector2(640, 480)
+shader_parameter/scan_line_amount = 0.466
+shader_parameter/warp_amount = 0.05
+shader_parameter/vignette_amount = 1.0
+shader_parameter/vignette_intensity = 0.112
+shader_parameter/grille_amount = 0.37
+shader_parameter/brightness_boost = 1.56
+
+[sub_resource type="Environment" id="Environment_iddtf"]
+background_mode = 3
+tonemap_mode = 2
+glow_enabled = true
+glow_intensity = 1.22
+glow_bloom = 0.15
+adjustment_enabled = true
+adjustment_brightness = 0.83
+adjustment_saturation = 0.58
+
+[sub_resource type="CameraAttributesPhysical" id="CameraAttributesPhysical_iddtf"]
+exposure_multiplier = 3.274
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kbgfp"]
+radius = 91.022
+
+[sub_resource type="Gradient" id="Gradient_kbgfp"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.305195, 0.662338)
+colors = PackedColorArray(1, 1, 1, 1, 0.262441, 0.262441, 0.262441, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_nuw7w"]
+gradient = SubResource("Gradient_kbgfp")
+width = 512
+height = 512
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[node name="Level" type="Node2D" node_paths=PackedStringArray("submarine", "ui_player_hp")]
+script = ExtResource("1_xekuc")
+submarine = NodePath("Submarine")
+ui_player_hp = NodePath("HUD/TextureRect/MarginContainer/Label")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="UnderwaterEffect" type="CanvasLayer" parent="."]
+
+[node name="UnderwaterEffect" type="ColorRect" parent="UnderwaterEffect"]
+material = SubResource("ShaderMaterial_j2ba4")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="CRTEffect" type="CanvasLayer" parent="."]
+layer = 3
+
+[node name="CRTEffect" type="ColorRect" parent="CRTEffect"]
+material = SubResource("ShaderMaterial_0aobv")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+metadata/_edit_use_anchors_ = true
+
+[node name="HUD" parent="." instance=ExtResource("13_nuw7w")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_iddtf")
+camera_attributes = SubResource("CameraAttributesPhysical_iddtf")
+
+[node name="MainCamera" type="Camera2D" parent="." node_paths=PackedStringArray("center_node")]
+unique_name_in_owner = true
+position = Vector2(584, 311)
+script = ExtResource("2_fptlh")
+max_radius = 400.0
+speed = 2.0
+center_node = NodePath("../Submarine")
+
+[node name="Background" type="Sprite2D" parent="MainCamera"]
+position = Vector2(0, -4)
+scale = Vector2(5, 5)
+texture = ExtResource("2_rfis5")
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+color = Color(0.0392157, 0.0392157, 0.0392157, 1)
+
+[node name="Submarine" type="AnimatableBody2D" parent="." groups=["player"]]
+unique_name_in_owner = true
+position = Vector2(577, 312)
+script = ExtResource("5_j2ba4")
+bullet_scene = ExtResource("7_xya8t")
+hook_scene = ExtResource("7_kbgfp")
+fire_rate = 0.1
+speed = 75.0
+
+[node name="Area2D" type="Area2D" parent="Submarine"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Submarine/Area2D"]
+position = Vector2(0, 29)
+shape = SubResource("CircleShape2D_kbgfp")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Submarine"]
+position = Vector2(0, -3)
+polygon = PackedVector2Array(-4, 125, -39, 117, -65, 98, -81, 72, -96, 40, -107, 10, -101, -17, -73, -33, -43, -49, -41, -94, -13, -104, 6, -94, 5, -56, 20, -55, 33, -75, 47, -46, 68, -31, 91, -27, 101, 2, 96, 31, 87, 50, 76, 68, 61, 97, 31, 119)
+
+[node name="LightBeam" type="Node2D" parent="Submarine"]
+scale = Vector2(0.65, 0.65)
+
+[node name="PointLight2D" type="PointLight2D" parent="Submarine/LightBeam"]
+position = Vector2(9.3079, 70.1923)
+shadow_enabled = true
+texture = ExtResource("3_huo5n")
+offset = Vector2(13, 750)
+texture_scale = 0.95
+
+[node name="PointLight2D2" type="PointLight2D" parent="Submarine/LightBeam"]
+position = Vector2(9.3079, 111.731)
+color = Color(0.167067, 0.419812, 0.419967, 1)
+energy = 0.5
+shadow_enabled = true
+shadow_color = Color(0.0194398, 0.049975, 0.00334989, 1)
+texture = ExtResource("4_iddtf")
+offset = Vector2(13, 750)
+
+[node name="PointLight2D3" type="PointLight2D" parent="Submarine/LightBeam"]
+position = Vector2(9.30767, 111.731)
+color = Color(0.615632, 0.950544, 0.257537, 1)
+energy = 0.5
+shadow_enabled = true
+shadow_color = Color(0, 0, 0, 1)
+texture = ExtResource("3_upydp")
+offset = Vector2(13, 750)
+
+[node name="Sprite2D" type="Sprite2D" parent="Submarine"]
+z_index = 5
+position = Vector2(0, 14)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("12_kbgfp")
+
+[node name="PointLight2D" type="PointLight2D" parent="Submarine/Sprite2D"]
+position = Vector2(0, -17.5)
+scale = Vector2(5.2, 5.2)
+texture = SubResource("GradientTexture2D_nuw7w")
+texture_scale = 0.4
+
+[node name="PointLight2D2" type="PointLight2D" parent="Submarine/Sprite2D"]
+position = Vector2(0, -17.5)
+scale = Vector2(5.2, 5.2)
+color = Color(0.615632, 0.950544, 0.257537, 1)
+energy = 0.5
+texture = SubResource("GradientTexture2D_nuw7w")
+texture_scale = 0.4
+
+[node name="HookPoint" type="Node2D" parent="Submarine"]
+position = Vector2(-1, 7)
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Submarine"]
+position = Vector2(-4, -49)
+texture = ExtResource("13_efumf")
+lifetime = 5.0
+emission_shape = 1
+emission_sphere_radius = 74.84
+direction = Vector2(0, -1)
+spread = 9.91
+gravity = Vector2(0, -988)
+initial_velocity_min = 49.45
+initial_velocity_max = 159.34
+linear_accel_min = 1.0
+linear_accel_max = 1.5
+angle_max = 360.0
+scale_amount_min = 0.01
+scale_amount_max = 0.05
+
+[node name="CPUParticles2D2" type="CPUParticles2D" parent="Submarine"]
+position = Vector2(-4, -49)
+texture = ExtResource("13_efumf")
+emission_shape = 1
+emission_sphere_radius = 27.02
+direction = Vector2(0, -1)
+spread = 9.91
+gravity = Vector2(0, -988)
+initial_velocity_min = 49.45
+initial_velocity_max = 159.34
+linear_accel_min = 2.0
+linear_accel_max = 3.0
+angle_max = 360.0
+scale_amount_min = 0.05
+scale_amount_max = 0.2
+
+[node name="SpawnPoint" parent="Submarine" instance=ExtResource("15_8kyqo")]
+position = Vector2(-760, 1945)
+
+[node name="SpawnPoint3" parent="Submarine" instance=ExtResource("15_8kyqo")]
+position = Vector2(-1244, -340)
+time_to_spawn = 15.0
+is_incremental = false
+
+[node name="SpawnPoint4" parent="Submarine" instance=ExtResource("15_8kyqo")]
+position = Vector2(1158, -407)
+time_to_spawn = 15.0
+is_incremental = false
+
+[node name="SpawnPoint2" parent="Submarine" instance=ExtResource("15_8kyqo")]
+position = Vector2(1113, 1945)
+
+[node name="CrateSpawner" parent="Submarine" instance=ExtResource("15_8kyqo")]
+position = Vector2(46, 1324)
+enemy = ExtResource("11_fptlh")
+is_incremental = false
+
+[node name="CrateSpawner2" parent="Submarine" instance=ExtResource("15_8kyqo")]
+position = Vector2(-188, 1261)
+enemy = ExtResource("11_fptlh")
+time_to_spawn = 25.0
+is_incremental = false
+
+[node name="CrateSpawner3" parent="Submarine" instance=ExtResource("15_8kyqo")]
+position = Vector2(246, 1264)
+enemy = ExtResource("11_fptlh")
+time_to_spawn = 15.0
+is_incremental = false
+
+[node name="Objects" type="Node" parent="."]
+
+[node name="Crate" parent="Objects" instance=ExtResource("11_fptlh")]
+position = Vector2(491, 577)
+
+[node name="Crate2" parent="Objects" instance=ExtResource("11_fptlh")]
+position = Vector2(629, 540)
+
+[node name="Crate3" parent="Objects" instance=ExtResource("11_fptlh")]
+position = Vector2(391, 542)
+
+[node name="Crate4" parent="Objects" instance=ExtResource("11_fptlh")]
+position = Vector2(677, 663)
+
+[node name="Crate5" parent="Objects" instance=ExtResource("11_fptlh")]
+position = Vector2(467, 692)
+
+[node name="Driller" parent="." instance=ExtResource("15_efumf")]
+
+[node name="Driller2" parent="." instance=ExtResource("15_efumf")]
+position = Vector2(676, -133)
+max_speed = 100.0
+
+[node name="Driller3" parent="." instance=ExtResource("15_efumf")]
+position = Vector2(349, -133)
+max_speed = 100.0
+
+[editable path="HUD"]

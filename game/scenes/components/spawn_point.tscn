@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnwtl5wpitoa1"]
+
+[ext_resource type="Script" uid="uid://dcivjeb0yjv4o" path="res://game/scripts/spawn_point.gd" id="1_5ddkw"]
+[ext_resource type="PackedScene" uid="uid://rqouxgvwm50t" path="res://game/scenes/components/driller.tscn" id="2_4tdr5"]
+
+[node name="SpawnPoint" type="Node2D"]
+script = ExtResource("1_5ddkw")
+enemy = ExtResource("2_4tdr5")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 10.0

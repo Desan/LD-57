@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://d1oss0rp73q2m"]
+
+[ext_resource type="Texture2D" uid="uid://dycco2le8mqvi" path="res://game/assets/enemys/behodler.png" id="1_mi0ti"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_06y3m"]
+radius = 110.005
+
+[sub_resource type="Gradient" id="Gradient_mi0ti"]
+interpolation_mode = 2
+colors = PackedColorArray(0.832472, 0.832472, 0.832472, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_06y3m"]
+gradient = SubResource("Gradient_mi0ti")
+width = 128
+height = 128
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Beholder" type="RigidBody2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_mi0ti")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_06y3m")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+scale = Vector2(3.6875, 3.75)
+color = Color(0.992816, 0.640652, 1, 1)
+texture = SubResource("GradientTexture2D_06y3m")

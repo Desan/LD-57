@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://biqhfx05lvd72"]
+
+[ext_resource type="Texture2D" uid="uid://oyb58w550y6p" path="res://game/assets/spot_light_beam.png" id="1_r8jjn"]
+
+[sub_resource type="Gradient" id="Gradient_blnkr"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="CPUParticles2D" type="CPUParticles2D"]
+emitting = false
+amount = 10
+texture = ExtResource("1_r8jjn")
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+particle_flag_align_y = true
+spread = 90.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 120.0
+initial_velocity_max = 200.0
+damping_min = 1.649
+damping_max = 56.594
+angle_min = -90.0
+angle_max = -90.0
+scale_amount_min = 0.02
+scale_amount_max = 0.03
+color_ramp = SubResource("Gradient_blnkr")

@@ -1,0 +1,58 @@
+[gd_scene load_steps=8 format=3 uid="uid://rqouxgvwm50t"]
+
+[ext_resource type="Script" uid="uid://cdtoc5a5okf0u" path="res://game/scripts/driller.gd" id="1_5d0er"]
+[ext_resource type="Texture2D" uid="uid://cecewf7k1y6qy" path="res://game/assets/enemys/driller.png" id="1_8q1vw"]
+[ext_resource type="PackedScene" uid="uid://biqhfx05lvd72" path="res://game/scenes/components/sfv_damage.tscn" id="3_cqvwg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_06y3m"]
+radius = 22.0227
+
+[sub_resource type="Gradient" id="Gradient_mi0ti"]
+interpolation_mode = 2
+colors = PackedColorArray(0.832472, 0.832472, 0.832472, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_06y3m"]
+gradient = SubResource("Gradient_mi0ti")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_cqvwg"]
+radius = 6.0
+height = 50.0
+
+[node name="Driller" type="RigidBody2D" groups=["damageable"]]
+script = ExtResource("1_5d0er")
+damage = 3
+damage_rate = 4.0
+max_speed = 140.0
+vxf_damage_scene = ExtResource("3_cqvwg")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.153439, 0.153439)
+texture = ExtResource("1_8q1vw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-23, 0)
+shape = SubResource("CircleShape2D_06y3m")
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(-5, 0)
+scale = Vector2(3.6875, 3.75)
+color = Color(0.992816, 0.640652, 1, 1)
+texture = SubResource("GradientTexture2D_06y3m")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(25, 0)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_cqvwg")
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_drill_toched"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_drill_stop"]

@@ -1,0 +1,31 @@
+[gd_scene load_steps=7 format=3 uid="uid://dxpu4qlxifalw"]
+
+[ext_resource type="Script" uid="uid://cx7psbkcmpr6j" path="res://game/scripts/crate.gd" id="1_6w8il"]
+[ext_resource type="Texture2D" uid="uid://b2yp3eu8p3qbd" path="res://game/assets/crate/png-clipart-angry-duterte-crate-crate-s-game-rectangle.png" id="1_pjioj"]
+[ext_resource type="Texture2D" uid="uid://be0dtryxq5qhf" path="res://game/assets/crate/Untitled-6.png" id="2_6w8il"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_8kyqo"]
+diffuse_texture = ExtResource("1_pjioj")
+specular_texture = ExtResource("2_6w8il")
+specular_shininess = 0.55
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ayx6l"]
+cull_mode = 2
+polygon = PackedVector2Array(-25, 34, -25, -14, 24, -15, 25, 34)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kbgfp"]
+size = Vector2(48, 48)
+
+[node name="Crate" type="RigidBody2D"]
+script = ExtResource("1_6w8il")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.1, 0.1)
+texture = SubResource("CanvasTexture_8kyqo")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+position = Vector2(-1.90735e-06, -10)
+occluder = SubResource("OccluderPolygon2D_ayx6l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_kbgfp")
