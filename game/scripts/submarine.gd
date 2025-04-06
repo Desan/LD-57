@@ -78,6 +78,8 @@ func update_hp_label():
 
 func take_damage(damage: int):
 	current_hp -= damage
+	if current_hp <= 0:
+		EventBus.game_over.emit()
 	update_hp_label()
 
 func collect_crate():

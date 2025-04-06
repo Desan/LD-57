@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://dpvgp66b207k7"]
+[gd_scene load_steps=30 format=3 uid="uid://dpvgp66b207k7"]
 
 [ext_resource type="Script" uid="uid://df5atssku01i" path="res://game/scripts/level.gd" id="1_xekuc"]
 [ext_resource type="Script" uid="uid://bxsbjwg7qkh2y" path="res://game/scripts/camera_controller.gd" id="2_fptlh"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://oyb58w550y6p" path="res://game/assets/spot_light_beam.png" id="3_huo5n"]
 [ext_resource type="Texture2D" uid="uid://dfvqreyqwp7id" path="res://game/assets/spot_light_beam_base.png" id="3_upydp"]
 [ext_resource type="Texture2D" uid="uid://kdqyp1xyiyyd" path="res://game/assets/spot_light_beam_main.png" id="4_iddtf"]
+[ext_resource type="FontFile" uid="uid://4raa5wrcbhes" path="res://game/assets/fonts/UnifrakturMaguntia-Regular.ttf" id="5_3sfws"]
 [ext_resource type="Script" uid="uid://k18yqeeuqmby" path="res://game/scripts/submarine.gd" id="5_j2ba4"]
 [ext_resource type="Shader" uid="uid://duabdv613du0m" path="res://game/materials/crt-effect.gdshader" id="5_upydp"]
 [ext_resource type="Shader" uid="uid://cktnjpxp0osth" path="res://game/materials/underwater.gdshader" id="7_0aobv"]
@@ -17,6 +18,7 @@
 [ext_resource type="PackedScene" uid="uid://bmnnubqx6uh6u" path="res://game/scenes/components/hud.tscn" id="13_nuw7w"]
 [ext_resource type="PackedScene" uid="uid://bnwtl5wpitoa1" path="res://game/scenes/components/spawn_point.tscn" id="15_8kyqo"]
 [ext_resource type="PackedScene" uid="uid://rqouxgvwm50t" path="res://game/scenes/components/driller.tscn" id="15_efumf"]
+[ext_resource type="Script" uid="uid://b186n5no80moq" path="res://game/scripts/restart_game_modal.gd" id="18_807jp"]
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_kbgfp"]
 noise_type = 3
@@ -74,10 +76,14 @@ height = 512
 fill = 1
 fill_from = Vector2(0.5, 0.5)
 
-[node name="Level" type="Node2D" node_paths=PackedStringArray("submarine", "ui_player_hp")]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_807jp"]
+bg_color = Color(0.125911, 0.125911, 0.125911, 1)
+
+[node name="Level" type="Node2D" node_paths=PackedStringArray("submarine", "ui_player_hp", "game_over_modal")]
 script = ExtResource("1_xekuc")
 submarine = NodePath("Submarine")
 ui_player_hp = NodePath("HUD/TextureRect/MarginContainer/Label")
+game_over_modal = NodePath("CanvasLayer/Control")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
@@ -245,7 +251,7 @@ is_incremental = false
 
 [node name="SpawnPoint4" parent="Submarine" instance=ExtResource("15_8kyqo")]
 position = Vector2(1158, -407)
-time_to_spawn = 15.0
+time_to_spawn = 13.0
 is_incremental = false
 
 [node name="SpawnPoint2" parent="Submarine" instance=ExtResource("15_8kyqo")]
@@ -294,5 +300,55 @@ max_speed = 100.0
 [node name="Driller3" parent="." instance=ExtResource("15_efumf")]
 position = Vector2(349, -133)
 max_speed = 100.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = 10
+script = ExtResource("18_807jp")
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Panel" type="Panel" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_807jp")
+
+[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/Control/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/Control/Panel/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Label" type="Label" parent="CanvasLayer/Control/Panel/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 42
+text = "Game over
+Thank you for playing hope you enjoy it"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="CanvasLayer/Control/Panel/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.615632, 0.950544, 0.257537, 1)
+theme_override_fonts/font = ExtResource("5_3sfws")
+theme_override_font_sizes/font_size = 56
+text = "Play Again"
 
 [editable path="HUD"]
